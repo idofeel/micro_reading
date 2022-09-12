@@ -9,21 +9,28 @@
     <van-form @submit="onSubmit">
       <van-cell-group inset>
         <van-field
-          v-model="username"
-          name="读者证号"
+          v-model="fromData.borId"
+          name="borId"
           placeholder="请输入读者证号"
           :rules="[{ required: true, message: '请输入读者证号' }]"
         />
         <van-field
-          v-model="password"
+          v-model="fromData.borPassword"
           type="password"
-          name="密码"
+          name="borPassword"
           placeholder="密码"
           :rules="[{ required: true, message: '请输入密码' }]"
         />
       </van-cell-group>
       <div style="margin: 40px 16px">
-        <van-button round block type="primary" native-type="submit">
+        <van-button
+          round
+          block
+          type="primary"
+          native-type="submit"
+          :loading="loading"
+          loading-text="绑定中..."
+        >
           提交
         </van-button>
       </div>
@@ -32,8 +39,10 @@
 </template>
 
 <script>
-import { ref } from "vue";
-
+import { reactive, computed, ref } from "vue";
+import { useStore } from "vuex";
+import { bindCard } from "@/api";
+import { Toast } from "vant";
 export default {
   props: {
     showLoginModal: {
@@ -42,18 +51,55 @@ export default {
     },
   },
   setup(props, context) {
-    const username = ref("");
-    const password = ref("");
-    const onSubmit = (values) => {
-      console.log("submit", values);
+    const store = useStore();
+
+    const paramsStr = window.location.search.substring(1);
+    const queryList = paramsStr.split("&");
+    const query = {};
+    //
+    queryList.forEach((i) => {
+      const [key, value] = i.split("=");
+      query[key] = value;
+    });
+
+    if (query.openId) {
+      store.commit("saveOpenId", query.openId);
+    }
+
+    const loading = ref(false);
+
+    const isLogin = computed(() => store.state.isLogin);
+    console.log("isLogin", isLogin);
+
+    const fromData = reactive({
+      openId: query.openId,
+      borId: "",
+      borPassword: "",
+    });
+
+    const onSubmit = async (values) => {
+      loading.value = true;
+      try {
+        const pass = await bindCard(values);
+        if (pass) {
+          store.commit("login", true);
+          closeModal();
+        } else {
+          Toast("登录失败");
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        loading.value = false;
+      }
     };
     const closeModal = () => {
       context.emit("update:showLoginModal", false);
     };
 
     return {
-      username,
-      password,
+      fromData,
+      loading,
       onSubmit,
       closeModal,
     };
@@ -71,10 +117,10 @@ export default {
   margin-bottom: 20px;
 }
 
-.close{
-    color: #222;
-    position: absolute;
-    right: 20px;
-    top:20px;
+.close {
+  color: #222;
+  position: absolute;
+  right: 20px;
+  top: 20px;
 }
 </style>

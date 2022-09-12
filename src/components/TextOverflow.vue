@@ -40,8 +40,8 @@ export default {
         };
       }
       return {
-        width: '100%'
-      }
+        width: "100%",
+      };
     },
     realText() {
       // 是否被截取
@@ -110,7 +110,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.text-overflow{
+.text-overflow {
   text-align: left;
 }
 .slot-box {

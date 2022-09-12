@@ -16,7 +16,9 @@ import {
   Form,
   Field,
   Icon,
-  Tag
+  Switch,
+  Tag,
+  Toast,
 } from "vant";
 
 import "vant/lib/index.css";
@@ -38,5 +40,7 @@ app
   .use(Form)
   .use(Field)
   .use(Icon)
+  .use(Switch)
   .use(Tag)
+  .use(Toast)
   .use(Dialog);
