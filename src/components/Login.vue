@@ -53,46 +53,35 @@ export default {
   setup(props, context) {
     const store = useStore();
 
-    const paramsStr = window.location.search.substring(1);
-    const queryList = paramsStr.split("&");
-    const query = {};
-    //
-    queryList.forEach((i) => {
-      const [key, value] = i.split("=");
-      query[key] = value;
-    });
-
-    if (query.openId) {
-      store.commit("saveOpenId", query.openId);
-    }
-
     const loading = ref(false);
 
-    const isLogin = computed(() => store.state.isLogin);
-    console.log("isLogin", isLogin);
+    const openId = computed(() => store.state.openId);
 
     const fromData = reactive({
-      openId: query.openId,
+      openId,
       borId: "",
       borPassword: "",
     });
 
     const onSubmit = async (values) => {
+      if (loading.value) return;
       loading.value = true;
+      console.log(values);
       try {
-        const pass = await bindCard(values);
+        const pass = await bindCard({ ...values, openId });
         if (pass) {
-          store.commit("login", true);
+           context.emit('success')
           closeModal();
         } else {
           Toast("登录失败");
         }
       } catch (error) {
-        console.log(error);
+        Toast("登录失败");
       } finally {
         loading.value = false;
       }
     };
+
     const closeModal = () => {
       context.emit("update:showLoginModal", false);
     };

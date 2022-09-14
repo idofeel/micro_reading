@@ -23,8 +23,12 @@ import {
 
 import "vant/lib/index.css";
 
+// import Vconsole from "vconsole";
+// new Vconsole();
+
 const app = createApp(App);
 app.use(store).use(router).mount("#app");
+
 
 // ui
 app

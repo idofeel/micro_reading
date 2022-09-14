@@ -1,21 +1,42 @@
 import { createStore } from "vuex";
 import createPersistedstate from "vuex-persistedstate";
+import { logut } from "@/api";
+import { Toast } from "vant";
 
 export default createStore({
   state: {
-    isLogin: false,
     openId: "",
+    user: {},
   },
   mutations: {
-    login(state, payload) {
-      console.log("loginloginloginlogin", state.isLogin);
-      state.isLogin = !!payload;
-    },
     saveOpenId(state, data) {
       state.openId = data;
     },
+    saveUser(state, data) {
+      console.log("saveUser", data);
+      state.user = data;
+    },
   },
-  actions: {},
+  actions: {
+    logut({ state, commit }) {
+      logut({ useropenid: state.user.openId }).then((res) => {
+        if (res.status === "1") {
+          Toast(res.msg || "登出失败");
+        } else {
+          Toast("登出成功");
+        }
+        commit("saveUser", {});
+      });
+    },
+  },
+  getters: {
+    isLogin(state) {
+      return state.user && state.user.borId;
+    },
+    userQrCode(state) {
+      return state.user ? state.user.qrcodeUrl : "";
+    },
+  },
   modules: {},
   plugins: [
     createPersistedstate({

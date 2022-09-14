@@ -25,3 +25,16 @@ export function bindCard(params) {
     params,
   });
 }
+
+/**
+ * @method
+ * @returns
+ * @description
+ */
+export function logut(params) {
+  return request({
+    url: "/wechat/readcert!ajaxUmreadCertBangdingCon.action",
+    method: "get",
+    params,
+  });
+}

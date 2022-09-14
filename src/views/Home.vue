@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <van-swipe class="home_swipe" :autoplay="3000" indicator-color="white">
-      <van-swipe-item v-for="i in 3" :key="i">
+      <van-swipe-item v-for="i in 1" :key="i">
         <img
           class="banner_img"
           :src="require('../assets/banner/stbanner.jpg')"
@@ -9,17 +9,21 @@
       </van-swipe-item>
     </van-swipe>
     <div class="login">
-      欢迎您使用首都图书馆数字资源，请先<span
-        class="btn"
-        @click="handleShowLoginDialog"
-        v-if="!isLogin"
-        >绑定读者证</span
-      >
-      <span class="btn" v-else>查看我的二维码读者证</span>
+      欢迎您使用首都图书馆数字资源，<span v-if="!isLogin">
+        请先<span class="btn" @click="handleShowLoginDialog">绑定读者证</span>
+      </span>
+      <template v-else>
+        <span class="btn" @click="showUserCode">查看我的二维码读者证</span>
+        <span class="btn" @click="logout">登出</span>
+      </template>
     </div>
     <van-sticky>
       <van-dropdown-menu>
-        <van-dropdown-item title="全语种" ref="langRef">
+        <van-dropdown-item
+          title="全语种"
+          :title-class="params.languages.length !== 0 ? 'drop_item' : ''"
+          ref="langRef"
+        >
           <div class="check_box">
             <van-button
               class="check_btn"
@@ -47,7 +51,11 @@
             </van-button>
           </div>
         </van-dropdown-item>
-        <van-dropdown-item title="全部类别" ref="tagRef">
+        <van-dropdown-item
+          title="全部类别"
+          :title-class="params.tagsNames.length !== 0 ? 'drop_item' : ''"
+          ref="tagRef"
+        >
           <div class="check_box">
             <van-button
               class="check_btn"
@@ -74,7 +82,11 @@
             </van-button>
           </div>
         </van-dropdown-item>
-        <van-dropdown-item title="访问方式" ref="itemRef">
+        <van-dropdown-item
+          title="访问方式"
+          ref="itemRef"
+          :title-class="params.displayNames.length !== 0 ? 'drop_item' : ''"
+        >
           <div class="check_box">
             <van-button
               class="check_btn"
@@ -161,7 +173,7 @@
                 >登录访问</van-tag
               >
               <van-tag class="tag" plain type="success" v-else
-                >未登录访问</van-tag
+                >免登录访问</van-tag
               >
             </div>
           </div>
@@ -172,14 +184,14 @@
           class="read_item_desc"
         >
           <template v-slot:default="{ clickToggle, expanded }">
-            <div @click="clickToggle" class="btn">
+            <div @click.stop="clickToggle" class="btn">
               {{ expanded ? "收起" : "展开" }}
             </div>
           </template>
         </TextOverflow>
       </div>
     </van-list>
-    <Login v-model:showLoginModal="showLoginModal" />
+    <Login v-model:showLoginModal="showLoginModal" @success="loginSucess" />
   </div>
 </template>
 
@@ -190,17 +202,26 @@ import TextOverflow from "../components/TextOverflow.vue";
 import Login from "../components/Login.vue";
 import useHomeData from "./useHomeData";
 import { useStore } from "vuex";
+import { useRoute } from "vue-router";
+import { ImagePreview } from "vant";
 
 export default {
   name: "Home",
   components: { TextOverflow, Login },
 
   setup() {
+    const store = useStore();
+    const { query } = useRoute();
+    if (query.openId) {
+      store.commit("saveOpenId", query.openId);
+    }
+
     // const list = ref([]);
     const showLoginModal = ref(false);
     const itemRef = ref(null);
     const tagRef = ref(null);
     const langRef = ref(null);
+    const tempUrl = ref(null);
 
     const {
       list,
@@ -210,37 +231,16 @@ export default {
       languages,
       tagsNames,
       checkedParams,
+      params,
       filterData,
       toggleLangChecked,
       toggleTagChecked,
       toggleDisplayChecked,
+      getData,
     } = useHomeData();
 
-    const store = useStore();
-
-    const isLogin = computed(() => store.state.isLogin);
-
-    // const loadMore = (params) => {
-    //   console.log(params);
-    //   // params 异步更新数据时的参数
-    //   params;
-
-    //   // 异步更新数据
-    //   // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-    //   setTimeout(() => {
-    //     for (let i = 0; i < 10; i++) {
-    //       list.value.push(list.value.length + 1);
-    //     }
-
-    //     // 加载状态结束
-    //     loading.value = false;
-
-    //     // 数据全部加载完成
-    //     if (list.value.length >= 40) {
-    //       finished.value = true;
-    //     }
-    //   }, 1000);
-    // };
+    const isLogin = computed(() => store.getters["isLogin"]);
+    const userQrCode = computed(() => store.getters["userQrCode"]);
 
     const handleShowLoginDialog = () => {
       showLoginModal.value = !showLoginModal.value;
@@ -252,12 +252,26 @@ export default {
     };
 
     const openTarget = (item) => {
-      if (item.displayName === "0" && !isLogin.value){
+      if (item.displayName === "0" && !isLogin.value) {
         handleShowLoginDialog();
-      }else{
+        tempUrl.value = item.url;
+      } else {
         window.open(item.url);
       }
     };
+
+    const showUserCode = () => {
+      ImagePreview({ images: [userQrCode.value] });
+    };
+
+    const loginSucess = () => {
+      getData();
+      if (tempUrl.value) {
+        window.location.href = tempUrl.value;
+      }
+    };
+
+    const logout = () => store.dispatch("logut");
 
     return {
       itemRef,
@@ -272,13 +286,18 @@ export default {
       languages,
       tagsNames,
       checkedParams,
+      params,
       handleShowLoginDialog,
+      showUserCode,
       toggleLangChecked,
       toggleTagChecked,
       onConfirm,
       openTarget,
       toggleDisplayChecked,
+      loginSucess,
+      logout,
       isLogin,
+      userQrCode,
       baseUrl: "/wechat",
     };
   },
@@ -373,5 +392,10 @@ export default {
   padding: 0;
   padding-left: 6px;
   color: var(--van-button-primary-background-color);
+}
+
+.drop_item:after {
+  border-color: transparent transparent var(--van-primary-color)
+    var(--van-primary-color) !important;
 }
 </style>

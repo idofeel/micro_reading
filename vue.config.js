@@ -18,14 +18,12 @@ module.exports = {
         target: "https://wechatadmin.clcn.net.cn",
         changeOrigin: true,
         secure: true,
-        pathWrite: {
+        pathRewrite: {
           "^/api": "",
         },
       },
     },
-    before() {
-      console.log("?????");
-    },
+  
   },
 
   css: {
