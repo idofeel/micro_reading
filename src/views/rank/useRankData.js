@@ -13,8 +13,8 @@ export default function () {
 
   const getData = async () => {
     rankList.value = [];
-    
-    if(loading.value)return;
+
+    if (loading.value) return;
     loading.value = true;
     finished.value = false;
 
@@ -30,5 +30,5 @@ export default function () {
   };
 
   onMounted(getData);
-  return { rankList, params,loading,finished, getData };
+  return { rankList, params, loading, finished, getData };
 }

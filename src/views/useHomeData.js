@@ -104,7 +104,7 @@ export default function () {
     accesslog({
       fromUrl: url,
       urlName: name.trim(),
-      type: 0
+      type: 0,
     });
   }
 

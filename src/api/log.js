@@ -10,10 +10,10 @@ export function accesslog(data) {
   return request({
     url: "/wechat/accesslog.action",
     method: "POST",
-    data:{
+    data: {
       fromUrl: data.fromUrl,
       urlName: data.urlName,
-      type: data.type
+      type: data.type,
     },
   });
 }

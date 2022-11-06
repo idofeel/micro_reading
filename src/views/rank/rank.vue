@@ -49,10 +49,10 @@ export default {
   setup() {
     const option1 = [
       { text: "全部时间", value: "" },
-      { text: "最近一年", value: 'topteny' },
-      { text: "最近一季", value: 'toptens' },
-      { text: "最近一月", value: 'toptenm' },
-      { text: "最近一周", value: 'toptenw' },
+      { text: "最近一年", value: "topteny" },
+      { text: "最近一季", value: "toptens" },
+      { text: "最近一月", value: "toptenm" },
+      { text: "最近一周", value: "toptenw" },
     ];
     const option2 = [
       { text: "全部记录", value: "" },

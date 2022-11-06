@@ -3,11 +3,15 @@
     <van-sticky>
       <div style="background: #fff">
         <van-swipe class="home_swipe" :autoplay="3000" indicator-color="white">
-          <van-swipe-item v-for="i in bannerList" :key="i" @click="$requestLog({fromUrl: i.url, urlName: i.name, type: 0});handleBannerUrl(i)">
-            <van-image
-              class="banner_img"
-              :src="baseUrl+i.picUrl"
-            />
+          <van-swipe-item
+            v-for="i in bannerList"
+            :key="i"
+            @click="
+              $requestLog({ fromUrl: i.url, urlName: i.name, type: 0 });
+              handleBannerUrl(i);
+            "
+          >
+            <van-image class="banner_img" :src="baseUrl + i.picUrl" />
           </van-swipe-item>
         </van-swipe>
         <div class="login">
@@ -304,10 +308,9 @@ export default {
 
     const logout = () => store.dispatch("logut");
 
-
-  const handleBannerUrl = item=>{
-    window.open(item.url)
-  }
+    const handleBannerUrl = (item) => {
+      window.open(item.url);
+    };
 
     return {
       itemRef,

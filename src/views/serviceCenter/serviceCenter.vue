@@ -4,7 +4,10 @@
       <van-swipe-item
         v-for="i in bannerList"
         :key="i"
-        @click="$requestLog({fromUrl: i.url, urlName: i.name, type: 1});handleBannerUrl(i)"
+        @click="
+          $requestLog({ fromUrl: i.url, urlName: i.name, type: 1 });
+          handleBannerUrl(i);
+        "
       >
         <van-image class="banner_img" :src="baseUrl + i.picUrl" />
       </van-swipe-item>
@@ -15,7 +18,10 @@
         v-for="item in columnList"
         :key="item.url"
         :text="item.title"
-        @click="$requestLog({fromUrl: item.url, urlName: item.title, type: 1});handleBannerUrl(item)"
+        @click="
+          $requestLog({ fromUrl: item.url, urlName: item.title, type: 1 });
+          handleBannerUrl(item);
+        "
       >
         <template v-slot:icon>
           <van-image :src="item.icon" style="width: 49px; height: 42px" />
@@ -42,13 +48,13 @@ import useCenterData from "@/views/serviceCenter/useCenterData";
 
 export default {
   setup() {
-    const { bannerList, columnList,handleBannerUrl } = useCenterData();
+    const { bannerList, columnList, handleBannerUrl } = useCenterData();
 
     return {
       baseUrl: process.env.VUE_APP_BASE_URL + "wechat",
       bannerList,
       columnList,
-      handleBannerUrl
+      handleBannerUrl,
     };
   },
 };

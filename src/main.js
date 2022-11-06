@@ -19,10 +19,13 @@ import {
   Icon,
   Switch,
   Tag,
-  Toast,Grid, GridItem,Divider,
-  Search
+  Toast,
+  Grid,
+  GridItem,
+  Divider,
+  Search,
 } from "vant";
-import {accesslog} from '@/api/log'
+import { accesslog } from "@/api/log";
 import "vant/lib/index.css";
 
 // import Vconsole from "vconsole";
@@ -30,7 +33,6 @@ import "vant/lib/index.css";
 
 const app = createApp(App);
 app.use(store).use(router).mount("#app");
-
 
 app.config.globalProperties.$requestLog = accesslog;
 
