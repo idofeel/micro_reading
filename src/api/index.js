@@ -38,3 +38,35 @@ export function logut(params) {
     params,
   });
 }
+
+/**
+ * @method 获取banner 列表
+ * @returns
+ * @description
+ */
+ export function getBannerList(params) {
+  return request({
+    url: "/wechat/advertisement!center.action",
+    method: "get",
+    params,
+  });
+}
+
+
+// 获取排行榜
+
+/**
+ * @method 获取banner 列表
+ * @returns {order_key,clc,max-entry}
+ * @description
+ */
+ export function getRankList(params) {
+  return request({
+    url: "/wechat/advertisement!toploan.action",
+    method: "get",
+    params,
+  });
+}
+
+
+// https://wechatadmin.clcn.net.cn/wechat/advertisement!toploan.action?order_key=toptenw&clc=A&max-entry=2

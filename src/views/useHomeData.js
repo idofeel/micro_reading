@@ -1,7 +1,10 @@
 import { onBeforeMount, computed, reactive, ref, toRefs } from "vue";
 import { getSourceList } from "@/api";
+import { accesslog } from "@/api/log.js";
+
 import { useStore } from "vuex";
 
+import useBannerData from "./useBannerData";
 
 export default function () {
   const response = reactive({
@@ -33,8 +36,13 @@ export default function () {
     setLoading(true);
     try {
       const res = await getSourceList();
-      response.list = res.micresourceList;
-      if(res.userinfo){
+      response.list = res.micresourceList.map((i) => {
+        return {
+          ...i,
+          visible: false,
+        };
+      });
+      if (res.userinfo) {
         store.commit("saveUser", res.userinfo);
       }
     } catch (error) {
@@ -92,7 +100,19 @@ export default function () {
 
   onBeforeMount(getData);
 
+  function log(url = "", name = "") {
+    accesslog({
+      fromUrl: url,
+      urlName: name.trim(),
+      type: 0
+    });
+  }
+
+  const { bannerList } = useBannerData();
+
   return {
+    bannerList,
+    log,
     loading,
     finished,
     ...toRefs(response),
@@ -123,6 +143,30 @@ export default function () {
     toggleLangChecked,
     toggleTagChecked,
     toggleDisplayChecked,
-    getData
+    getData,
   };
 }
+
+// $(document).ready(function(){
+//   $("a").click(function(){
+//       var title="";
+//       if (this.title){
+//           title=this.title
+//       }else {
+//           title=this.text
+//       }
+//       $.ajax({
+//           type: 'POST',
+//           url:"https://wechatadmin.clcn.net.cn/wechat/accesslog.action",
+//           data:{"fromUrl":this.href,"urlName":title.trim()},
+//           async:false});
+//   });
+// });
+
+// function loginfoTo(url,title) {
+//   console.log(title);
+//   $.ajax({
+//       url:"https://wechatadmin.clcn.net.cn/wechat/accesslog.action",
+//       data:{"fromUrl":url,"urlName":title.trim()},
+//       async:false});
+// }

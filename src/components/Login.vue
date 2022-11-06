@@ -70,7 +70,7 @@ export default {
       try {
         const pass = await bindCard({ ...values, openId });
         if (pass) {
-           context.emit('success')
+          context.emit("success");
           closeModal();
         } else {
           Toast("登录失败");

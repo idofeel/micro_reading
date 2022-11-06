@@ -1,119 +1,122 @@
 <template>
   <div class="home">
-    <van-swipe class="home_swipe" :autoplay="3000" indicator-color="white">
-      <van-swipe-item v-for="i in 1" :key="i">
-        <img
-          class="banner_img"
-          :src="require('../assets/banner/stbanner.jpg')"
-        />
-      </van-swipe-item>
-    </van-swipe>
-    <div class="login">
-      欢迎您使用首都图书馆数字资源，<span v-if="!isLogin">
-        请先<span class="btn" @click="handleShowLoginDialog">绑定读者证</span>
-      </span>
-      <template v-else>
-        <span class="btn" @click="showUserCode">查看我的二维码读者证</span>
-        <span class="btn" @click="logout">登出</span>
-      </template>
-    </div>
     <van-sticky>
-      <van-dropdown-menu>
-        <van-dropdown-item
-          title="全语种"
-          :title-class="params.languages.length !== 0 ? 'drop_item' : ''"
-          ref="langRef"
-        >
-          <div class="check_box">
-            <van-button
-              class="check_btn"
-              type="primary"
-              size="small"
-              :plain="checkedParams.languages.length !== 0"
-              @click="checkedParams.languages.length = 0"
-              >全部</van-button
+      <div style="background: #fff">
+        <van-swipe class="home_swipe" :autoplay="3000" indicator-color="white">
+          <van-swipe-item v-for="i in bannerList" :key="i" @click="$requestLog({fromUrl: i.url, urlName: i.name, type: 0});handleBannerUrl(i)">
+            <van-image
+              class="banner_img"
+              :src="baseUrl+i.picUrl"
+            />
+          </van-swipe-item>
+        </van-swipe>
+        <div class="login">
+          欢迎使用首都图书馆数字资源，<span v-if="!isLogin">
+            请先<span class="btn" @click="handleShowLoginDialog"
+              >绑定读者证</span
             >
+          </span>
+          <template v-else>
+            <span class="btn" @click="showUserCode">查看二维码读者证</span>
+            <span class="btn" @click="logout">登出</span>
+          </template>
+        </div>
+        <van-dropdown-menu>
+          <van-dropdown-item
+            title="全语种"
+            :title-class="params.languages.length !== 0 ? 'drop_item' : ''"
+            ref="langRef"
+          >
+            <div class="check_box">
+              <van-button
+                class="check_btn"
+                type="primary"
+                size="small"
+                :plain="checkedParams.languages.length !== 0"
+                @click="checkedParams.languages.length = 0"
+                >全部</van-button
+              >
 
-            <van-button
-              class="check_btn"
-              type="primary"
-              size="small"
-              v-for="i in languages"
-              :plain="!checkedParams.languages.includes(i)"
-              @click="toggleLangChecked(i)"
-              :key="i"
-              >{{ i }}</van-button
-            >
-          </div>
-          <div style="padding: 5px 16px">
-            <van-button type="danger" block round @click="onConfirm(langRef)">
-              确认
-            </van-button>
-          </div>
-        </van-dropdown-item>
-        <van-dropdown-item
-          title="全部类别"
-          :title-class="params.tagsNames.length !== 0 ? 'drop_item' : ''"
-          ref="tagRef"
-        >
-          <div class="check_box">
-            <van-button
-              class="check_btn"
-              type="primary"
-              size="small"
-              :plain="checkedParams.tagsNames.length !== 0"
-              @click="checkedParams.tagsNames.length = 0"
-              >全部</van-button
-            >
-            <van-button
-              class="check_btn"
-              type="primary"
-              size="small"
-              v-for="i in tagsNames"
-              :key="i"
-              :plain="!checkedParams.tagsNames.includes(i)"
-              @click="toggleTagChecked(i)"
-              >{{ i }}</van-button
-            >
-          </div>
-          <div style="padding: 5px 16px">
-            <van-button type="danger" block round @click="onConfirm(tagRef)">
-              确认
-            </van-button>
-          </div>
-        </van-dropdown-item>
-        <van-dropdown-item
-          title="访问方式"
-          ref="itemRef"
-          :title-class="params.displayNames.length !== 0 ? 'drop_item' : ''"
-        >
-          <div class="check_box">
-            <van-button
-              class="check_btn"
-              type="primary"
-              size="small"
-              :plain="checkedParams.displayNames.length !== 0"
-              @click="checkedParams.displayNames.length = 0"
-              >全部</van-button
-            >
-            <van-button
-              class="check_btn"
-              type="primary"
-              size="small"
-              v-for="i in displayNames"
-              :key="i"
-              :plain="!checkedParams.displayNames.includes(i)"
-              @click="toggleDisplayChecked(i)"
-              >{{ i }}</van-button
-            >
-          </div>
-          <div style="padding: 5px 16px">
-            <van-button type="danger" block round @click="onConfirm(itemRef)">
-              确认
-            </van-button>
-          </div>
-        </van-dropdown-item>
-        <!-- <van-dropdown-item title="访问方式" ref="itemRef">
+              <van-button
+                class="check_btn"
+                type="primary"
+                size="small"
+                v-for="i in languages"
+                :plain="!checkedParams.languages.includes(i)"
+                @click="toggleLangChecked(i)"
+                :key="i"
+                >{{ i }}</van-button
+              >
+            </div>
+            <div style="padding: 5px 16px">
+              <van-button type="danger" block round @click="onConfirm(langRef)">
+                确认
+              </van-button>
+            </div>
+          </van-dropdown-item>
+          <van-dropdown-item
+            title="全部类别"
+            :title-class="params.tagsNames.length !== 0 ? 'drop_item' : ''"
+            ref="tagRef"
+          >
+            <div class="check_box">
+              <van-button
+                class="check_btn"
+                type="primary"
+                size="small"
+                :plain="checkedParams.tagsNames.length !== 0"
+                @click="checkedParams.tagsNames.length = 0"
+                >全部</van-button
+              >
+              <van-button
+                class="check_btn"
+                type="primary"
+                size="small"
+                v-for="i in tagsNames"
+                :key="i"
+                :plain="!checkedParams.tagsNames.includes(i)"
+                @click="toggleTagChecked(i)"
+                >{{ i }}</van-button
+              >
+            </div>
+            <div style="padding: 5px 16px">
+              <van-button type="danger" block round @click="onConfirm(tagRef)">
+                确认
+              </van-button>
+            </div>
+          </van-dropdown-item>
+          <van-dropdown-item
+            title="访问方式"
+            ref="itemRef"
+            :title-class="params.displayNames.length !== 0 ? 'drop_item' : ''"
+          >
+            <div class="check_box">
+              <van-button
+                class="check_btn"
+                type="primary"
+                size="small"
+                :plain="checkedParams.displayNames.length !== 0"
+                @click="checkedParams.displayNames.length = 0"
+                >全部</van-button
+              >
+              <van-button
+                class="check_btn"
+                type="primary"
+                size="small"
+                v-for="i in displayNames"
+                :key="i"
+                :plain="!checkedParams.displayNames.includes(i)"
+                @click="toggleDisplayChecked(i)"
+                >{{ i }}</van-button
+              >
+            </div>
+            <div style="padding: 5px 16px">
+              <van-button type="danger" block round @click="onConfirm(itemRef)">
+                确认
+              </van-button>
+            </div>
+          </van-dropdown-item>
+          <!-- <van-dropdown-item title="访问方式" ref="itemRef">
           <van-cell center title="登录访问">
             <template #right-icon>
               <van-switch
@@ -138,7 +141,8 @@
             </van-button>
           </div>
         </van-dropdown-item> -->
-      </van-dropdown-menu>
+        </van-dropdown-menu>
+      </div>
     </van-sticky>
 
     <van-list
@@ -161,10 +165,19 @@
             <div class="try" v-if="item.isTry === 1">试用</div>
           </div>
           <div class="right">
-            <div class="van-multi-ellipsis--l2 title">
-              {{ item.shortName }}
+            <div>
+              <div class="van-multi-ellipsis--l2 title">
+                {{ item.shortName }}
+              </div>
             </div>
             <div>
+              <van-tag class="tag" plain type="warning" v-if="item.languages">{{
+                item.languages
+              }}</van-tag>
+              <van-tag class="tag" plain color="#7232dd" v-if="item.tagName">{{
+                item.tagName
+              }}</van-tag>
+
               <van-tag
                 class="tag"
                 plain
@@ -176,9 +189,24 @@
                 >免登录访问</van-tag
               >
             </div>
+            <div style="margin-bottom: 6px">
+              <!-- align-self: flex-end; -->
+              <span
+                class="link"
+                @click.stop="item.visible = !item.visible"
+                v-if="item.resume"
+                >{{ item.visible ? "收起简介" : "查看简介" }}</span
+              >
+            </div>
           </div>
         </div>
-        <TextOverflow
+        <transition name="van-slide-down">
+          <div class="read_item_desc" v-show="item.visible">
+            {{ item.resume }}
+          </div>
+        </transition>
+
+        <!-- <TextOverflow
           :text="item.resume || ''"
           :maxLines="1"
           class="read_item_desc"
@@ -188,7 +216,7 @@
               {{ expanded ? "收起" : "展开" }}
             </div>
           </template>
-        </TextOverflow>
+        </TextOverflow> -->
       </div>
     </van-list>
     <Login v-model:showLoginModal="showLoginModal" @success="loginSucess" />
@@ -198,7 +226,7 @@
 <script>
 // @ is an alias to /src
 import { ref, computed } from "vue";
-import TextOverflow from "../components/TextOverflow.vue";
+// import TextOverflow from "../components/TextOverflow.vue";
 import Login from "../components/Login.vue";
 import useHomeData from "./useHomeData";
 import { useStore } from "vuex";
@@ -207,7 +235,7 @@ import { ImagePreview } from "vant";
 
 export default {
   name: "Home",
-  components: { TextOverflow, Login },
+  components: { Login },
 
   setup() {
     const store = useStore();
@@ -222,9 +250,9 @@ export default {
     const tagRef = ref(null);
     const langRef = ref(null);
     const tempUrl = ref(null);
-
     const {
       list,
+      bannerList,
       loading,
       finished,
       displayNames,
@@ -237,6 +265,7 @@ export default {
       toggleTagChecked,
       toggleDisplayChecked,
       getData,
+      log,
     } = useHomeData();
 
     const isLogin = computed(() => store.getters["isLogin"]);
@@ -252,6 +281,8 @@ export default {
     };
 
     const openTarget = (item) => {
+      log(item.url, item.shortName);
+      console.log(item);
       if (item.displayName === "0" && !isLogin.value) {
         handleShowLoginDialog();
         tempUrl.value = item.url;
@@ -273,6 +304,11 @@ export default {
 
     const logout = () => store.dispatch("logut");
 
+
+  const handleBannerUrl = item=>{
+    window.open(item.url)
+  }
+
     return {
       itemRef,
       langRef,
@@ -281,6 +317,7 @@ export default {
       loading,
       finished,
       list,
+      bannerList,
       showLoginModal,
       displayNames,
       languages,
@@ -288,6 +325,7 @@ export default {
       checkedParams,
       params,
       handleShowLoginDialog,
+      handleBannerUrl,
       showUserCode,
       toggleLangChecked,
       toggleTagChecked,
@@ -298,7 +336,7 @@ export default {
       logout,
       isLogin,
       userQrCode,
-      baseUrl: "/wechat",
+      baseUrl: process.env.VUE_APP_BASE_URL + "wechat",
     };
   },
 };
@@ -328,17 +366,22 @@ export default {
   background: #f2f2f2;
 
   .read_item {
-    padding: 10px;
     background: #fff;
     margin-bottom: 10px;
 
     &_info {
+      padding: 10px;
       display: flex;
       flex-direction: row;
+      position: relative;
+      z-index: 2;
+      background: #fff;
     }
     &_desc {
-      margin-top: 10px;
+      // margin-top: 10px;
+      padding: 0 10px 10px;
       text-align: left;
+      font-size: 14px;
     }
 
     .left {
@@ -347,6 +390,7 @@ export default {
       .img {
         width: 100%;
         height: 94px;
+        border-radius: 8px;
       }
 
       .try {
@@ -370,12 +414,18 @@ export default {
       margin-left: 10px;
 
       .title {
-        font-weight: 500;
+        font-weight: 600;
         text-align: left;
+        // margin-bottom: 8px;
       }
 
       .tag {
         margin-right: 8px;
+      }
+
+      .link {
+        color: var(--van-button-primary-background-color);
+        font-size: 14px;
       }
     }
   }

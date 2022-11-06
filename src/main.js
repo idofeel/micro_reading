@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 import {
   Button,
+  Image,
   Swipe,
   SwipeItem,
   DropdownMenu,
@@ -18,9 +19,10 @@ import {
   Icon,
   Switch,
   Tag,
-  Toast,
+  Toast,Grid, GridItem,Divider,
+  Search
 } from "vant";
-
+import {accesslog} from '@/api/log'
 import "vant/lib/index.css";
 
 // import Vconsole from "vconsole";
@@ -30,9 +32,12 @@ const app = createApp(App);
 app.use(store).use(router).mount("#app");
 
 
+app.config.globalProperties.$requestLog = accesslog;
+
 // ui
 app
   .use(Button)
+  .use(Image)
   .use(Swipe)
   .use(SwipeItem)
   .use(DropdownMenu)
@@ -46,5 +51,9 @@ app
   .use(Icon)
   .use(Switch)
   .use(Tag)
+  .use(Grid)
+  .use(GridItem)
+  .use(Divider)
+  .use(Search)
   .use(Toast)
   .use(Dialog);

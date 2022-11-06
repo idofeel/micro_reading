@@ -1,5 +1,23 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <div>
+    {{value}}
+    <a-input v-model="value" :value="value"></a-input>
+
+    <el-input v-model="value" :value="value" />
+
   </div>
 </template>
+
+<script>
+  export default {
+    data(){
+      return {
+        value: '123'
+      }
+    }
+  }
+</script>
+
+<style lang="scss" scoped>
+
+</style>

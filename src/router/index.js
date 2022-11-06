@@ -7,6 +7,16 @@ const routes = [
     name: "Home",
     component: Home,
   },
+  {
+    path: "/center",
+    name: "center",
+    component: () => import("@/views/serviceCenter/serviceCenter.vue"),
+  },
+  {
+    path: "/rank",
+    name: "rank",
+    component: () => import("@/views/rank/rank.vue"),
+  },
 ];
 
 const router = createRouter({

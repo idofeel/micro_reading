@@ -11,17 +11,16 @@ const service = axios.create({
 // 请求拦截
 service.interceptors.request.use(
   (config) => {
-
-    if(config.method === 'get'){
+    if (config.method === "get") {
       config.params = {
         ...config.params,
-        openId: store.state.openId
-      }
-    }else{
+        openId: store.state.openId,
+      };
+    } else {
       config.data = {
         ...config.data,
-        openId: store.state.openId
-      }
+        openId: store.state.openId,
+      };
     }
     console.log("store", config);
 
