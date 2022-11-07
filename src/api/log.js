@@ -10,6 +10,9 @@ export function accesslog(data) {
   return request({
     url: "/wechat/accesslog.action",
     method: "POST",
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
     data: {
       fromUrl: data.fromUrl,
       urlName: data.urlName,

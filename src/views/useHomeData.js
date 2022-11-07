@@ -6,7 +6,7 @@ import { useStore } from "vuex";
 
 import useBannerData from "./useBannerData";
 
-export default function () {
+export default function (props) {
   const response = reactive({
     list: [],
     params: {
@@ -35,7 +35,7 @@ export default function () {
   const getData = async () => {
     setLoading(true);
     try {
-      const res = await getSourceList();
+      const res = await getSourceList({ isUp: 1, stat: props.stat });
       response.list = res.micresourceList.map((i) => {
         return {
           ...i,
@@ -108,10 +108,11 @@ export default function () {
     });
   }
 
-  const { bannerList } = useBannerData();
+  const { bannerList, handleBannerUrl } = useBannerData({ type: props.type });
 
   return {
     bannerList,
+    handleBannerUrl,
     log,
     loading,
     finished,

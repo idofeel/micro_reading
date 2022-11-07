@@ -80,7 +80,8 @@
                 :key="i"
                 :plain="!checkedParams.tagsNames.includes(i)"
                 @click="toggleTagChecked(i)"
-                >{{ i }}</van-button
+              >
+                {{ i }}</van-button
               >
             </div>
             <div style="padding: 5px 16px">
@@ -187,8 +188,8 @@
                 plain
                 type="primary"
                 v-if="item.displayName === '0'"
-                >登录访问</van-tag
-              >
+                >登录访问
+              </van-tag>
               <van-tag class="tag" plain type="success" v-else
                 >免登录访问</van-tag
               >
@@ -270,7 +271,7 @@ export default {
       toggleDisplayChecked,
       getData,
       log,
-    } = useHomeData();
+    } = useHomeData({ type: 0, stat: 0 });
 
     const isLogin = computed(() => store.getters["isLogin"]);
     const userQrCode = computed(() => store.getters["userQrCode"]);

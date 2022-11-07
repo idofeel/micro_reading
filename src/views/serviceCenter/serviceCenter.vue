@@ -16,15 +16,18 @@
     <van-grid :column-num="3">
       <van-grid-item
         v-for="item in columnList"
-        :key="item.url"
-        :text="item.title"
+        :key="item.id"
+        :text="item.shortName"
         @click="
           $requestLog({ fromUrl: item.url, urlName: item.title, type: 1 });
           handleBannerUrl(item);
         "
       >
         <template v-slot:icon>
-          <van-image :src="item.icon" style="width: 49px; height: 42px" />
+          <van-image
+            :src="baseUrl + item.picUrl"
+            style="width: 49px; height: 42px"
+          />
         </template>
       </van-grid-item>
 

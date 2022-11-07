@@ -35,9 +35,9 @@
         v-for="(item, index) in rankList"
         :key="item"
         :title="`${index + 1}. ${item.bookNames}`"
-        :value="`借阅：${item.count}次`"
         value-class="cell_value"
       />
+      <!-- :value="`借阅：${item.count}次`" -->
     </van-list>
   </div>
 </template>
