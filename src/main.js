@@ -24,6 +24,7 @@ import {
   GridItem,
   Divider,
   Search,
+  Popover,
 } from "vant";
 import { accesslog } from "@/api/log";
 import "vant/lib/index.css";
@@ -57,5 +58,6 @@ app
   .use(GridItem)
   .use(Divider)
   .use(Search)
+  .use(Popover)
   .use(Toast)
   .use(Dialog);

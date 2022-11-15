@@ -12,7 +12,44 @@
         <van-image class="banner_img" :src="baseUrl + i.picUrl" />
       </van-swipe-item>
     </van-swipe>
-
+    <van-search
+      v-model="submitParams.value"
+      show-action
+      label="地址"
+      placeholder="请输入搜索关键词"
+      @search="onSearch"
+    >
+      <template #label>
+        <van-popover
+          v-model:show="showPopover"
+          :actions="actions"
+          @select="onSelect"
+          placement="bottom-start"
+          theme="dark"
+        >
+          <template #reference>
+            <div>
+              {{ submitParams.text }}
+              <van-icon name="arrow-down" />
+            </div>
+          </template>
+        </van-popover>
+      </template>
+      <template #action>
+        <div @click="onSearch">搜索</div>
+      </template>
+    </van-search>
+    <!-- onsubmit="loginfoTo('/wechat/wxbanding!opacbook.action','首页OPAC查询')" -->
+    <form
+      name="addForm"
+      v-show="false"
+      id="addForm1"
+      action="/wechat/wxbanding!opacbook.action"
+      method="post"
+    >
+      <input type="text" name="allover" :value="submitParams.key" />
+      <input type="text" name="keyword" :value="submitParams.value" />
+    </form>
     <van-grid :column-num="3">
       <van-grid-item
         v-for="item in columnList"
@@ -48,16 +85,41 @@
 
 <script>
 import useCenterData from "@/views/serviceCenter/useCenterData";
+import { ref, getCurrentInstance } from "vue";
 
 export default {
   setup() {
-    const { bannerList, columnList, handleBannerUrl } = useCenterData();
+    const {
+      bannerList,
+      columnList,
+      handleBannerUrl,
+      submitParams,
+      actions,
+      onSelect,
+    } = useCenterData();
+
+    const { proxy } = getCurrentInstance();
+    const showPopover = ref(false);
+
+    const onSearch = () => {
+      proxy.$requestLog({
+        fromUrl: "/wechat/wxbanding!opacbook.action",
+        urlName: "首页OPAC查询",
+        type: 1,
+      });
+      document.getElementById("addForm1").submit();
+    };
 
     return {
       baseUrl: process.env.VUE_APP_BASE_URL + "wechat",
       bannerList,
       columnList,
       handleBannerUrl,
+      actions,
+      showPopover,
+      onSelect,
+      submitParams,
+      onSearch,
     };
   },
 };
