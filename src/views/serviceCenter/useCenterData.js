@@ -5,11 +5,12 @@ import useHomeData from "../useHomeData";
 
 export default function () {
   const actions = [
-    { text: "提名", id: "wti" },
-    { text: "关键词", id: "wrd" },
-    { text: "作者", id: "wau" },
-    { text: "出版社", id: "wpu" },
+    { text: "题名", id: "title" },
+    { text: "主题词", id: "sub" },
+    { text: "作者", id: "creator" },
+    { text: "出版社", id: "lsr03" },
     { text: "ISBN", id: "isb" },
+    { text: "全部检索", id: "any" },
   ];
 
   const submitParams = reactive({

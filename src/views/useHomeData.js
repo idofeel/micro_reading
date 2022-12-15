@@ -1,7 +1,7 @@
 import { onBeforeMount, computed, reactive, ref, toRefs } from "vue";
 import { getSourceList } from "@/api";
 import { accesslog } from "@/api/log.js";
-
+import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 
 import useBannerData from "./useBannerData";
@@ -25,6 +25,11 @@ export default function (props) {
     languages: [],
   });
   const store = useStore();
+
+  const { query } = useRoute();
+  if (query.openId) {
+    store.commit("saveOpenId", query.openId);
+  }
 
   const loading = ref(true);
   const finished = ref(false);
@@ -70,20 +75,23 @@ export default function (props) {
   };
 
   const toggleDisplayChecked = (i) => {
-    let { displayNames } = response.checkedParams;
-    if (displayNames.includes(i)) {
-      response.checkedParams.displayNames = displayNames.filter((n) => n !== i);
-    } else {
-      displayNames.push(i);
-    }
+    response.checkedParams.displayNames = [i];
+
+    // let { displayNames } = response.checkedParams;
+    // if (displayNames.includes(i)) {
+    //   response.checkedParams.displayNames = displayNames.filter((n) => n !== i);
+    // } else {
+    //   displayNames.push(i);
+    // }
   };
   const toggleLangChecked = (i) => {
-    let { languages } = response.checkedParams;
-    if (languages.includes(i)) {
-      response.checkedParams.languages = languages.filter((n) => n !== i);
-    } else {
-      languages.push(i);
-    }
+    // let { languages } = response.checkedParams;
+    response.checkedParams.languages = [i];
+    // if (languages.includes(i)) {
+    //   response.checkedParams.languages = languages.filter((n) => n !== i);
+    // } else {
+    //   languages.push(i);
+    // }
   };
 
   const toggleTagChecked = (i) => {

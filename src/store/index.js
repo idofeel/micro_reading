@@ -31,7 +31,7 @@ export default createStore({
   },
   getters: {
     isLogin(state) {
-      return state.user && state.user.borId;
+      return state.user && state.user.qrcodeUrl;
     },
     userQrCode(state) {
       return state.user ? state.user.qrcodeUrl : "";

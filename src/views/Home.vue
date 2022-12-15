@@ -14,17 +14,7 @@
             <van-image class="banner_img" :src="baseUrl + i.picUrl" />
           </van-swipe-item>
         </van-swipe>
-        <div class="login">
-          欢迎使用首都图书馆数字资源，<span v-if="!isLogin">
-            请先<span class="btn" @click="handleShowLoginDialog"
-              >绑定读者证</span
-            >
-          </span>
-          <template v-else>
-            <span class="btn" @click="showUserCode">查看二维码读者证</span>
-            <span class="btn" @click="logout">登出</span>
-          </template>
-        </div>
+       <Login ref="loginRef" @success="loginSucess" />
         <van-dropdown-menu>
           <van-dropdown-item
             title="全语种"
@@ -32,14 +22,14 @@
             ref="langRef"
           >
             <div class="check_box">
-              <van-button
+              <!-- <van-button
                 class="check_btn"
                 type="primary"
                 size="small"
                 :plain="checkedParams.languages.length !== 0"
                 @click="checkedParams.languages.length = 0"
                 >全部</van-button
-              >
+              > -->
 
               <van-button
                 class="check_btn"
@@ -96,14 +86,14 @@
             :title-class="params.displayNames.length !== 0 ? 'drop_item' : ''"
           >
             <div class="check_box">
-              <van-button
+              <!-- <van-button
                 class="check_btn"
                 type="primary"
                 size="small"
                 :plain="checkedParams.displayNames.length !== 0"
                 @click="checkedParams.displayNames.length = 0"
                 >全部</van-button
-              >
+              > -->
               <van-button
                 class="check_btn"
                 type="primary"
@@ -224,7 +214,6 @@
         </TextOverflow> -->
       </div>
     </van-list>
-    <Login v-model:showLoginModal="showLoginModal" @success="loginSucess" />
   </div>
 </template>
 
@@ -235,8 +224,7 @@ import { ref, computed } from "vue";
 import Login from "../components/Login.vue";
 import useHomeData from "./useHomeData";
 import { useStore } from "vuex";
-import { useRoute } from "vue-router";
-import { ImagePreview } from "vant";
+// import { useRoute } from "vue-router";
 
 export default {
   name: "Home",
@@ -244,10 +232,10 @@ export default {
 
   setup() {
     const store = useStore();
-    const { query } = useRoute();
-    if (query.openId) {
-      store.commit("saveOpenId", query.openId);
-    }
+    // const { query } = useRoute();
+    // if (query.openId) {
+    //   store.commit("saveOpenId", query.openId);
+    // }
 
     // const list = ref([]);
     const showLoginModal = ref(false);
@@ -255,6 +243,8 @@ export default {
     const tagRef = ref(null);
     const langRef = ref(null);
     const tempUrl = ref(null);
+    const loginRef = ref(null);
+
     const {
       list,
       bannerList,
@@ -274,11 +264,7 @@ export default {
     } = useHomeData({ type: 0, stat: 0 });
 
     const isLogin = computed(() => store.getters["isLogin"]);
-    const userQrCode = computed(() => store.getters["userQrCode"]);
 
-    const handleShowLoginDialog = () => {
-      showLoginModal.value = !showLoginModal.value;
-    };
 
     const onConfirm = (name) => {
       filterData();
@@ -289,16 +275,14 @@ export default {
       log(item.url, item.shortName);
       console.log(item);
       if (item.displayName === "0" && !isLogin.value) {
-        handleShowLoginDialog();
+       loginRef.value.handleShowLoginDialog();
         tempUrl.value = item.url;
       } else {
         window.open(item.url);
       }
     };
 
-    const showUserCode = () => {
-      ImagePreview({ images: [userQrCode.value] });
-    };
+  
 
     const loginSucess = () => {
       getData();
@@ -307,7 +291,6 @@ export default {
       }
     };
 
-    const logout = () => store.dispatch("logut");
 
     const handleBannerUrl = (item) => {
       window.open(item.url);
@@ -317,6 +300,7 @@ export default {
       itemRef,
       langRef,
       tagRef,
+      loginRef,
 
       loading,
       finished,
@@ -328,18 +312,13 @@ export default {
       tagsNames,
       checkedParams,
       params,
-      handleShowLoginDialog,
       handleBannerUrl,
-      showUserCode,
       toggleLangChecked,
       toggleTagChecked,
       onConfirm,
       openTarget,
       toggleDisplayChecked,
       loginSucess,
-      logout,
-      isLogin,
-      userQrCode,
       baseUrl: process.env.VUE_APP_BASE_URL + "wechat",
     };
   },

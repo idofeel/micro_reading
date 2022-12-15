@@ -26,14 +26,7 @@ const routes = [
       title: "借阅排行",
     },
   },
-  {
-    path: "/ApplyQuery",
-    name: "rank",
-    component: () => import("@/views/rank/rank.vue"),
-    meta: {
-      title: "借阅排行",
-    },
-  },
+
 ];
 
 const router = createRouter({
